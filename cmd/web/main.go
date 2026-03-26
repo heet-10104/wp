@@ -61,30 +61,27 @@ func (c *Client) readPump(hub *Hub) {
 			log.Printf("Error unmarshalling message: %v", err)
 			continue
 		}
-		log.Printf("Received message: %s", msg.Type)
+
+		if !validateMessage(msg) {
+			log.Printf("Invalid message format: %+v", msg)
+			continue
+		}
+
+		log.Printf("Received message: %+v", msg)
 
 		switch msg.Type {
-		case "Personal":
-			if msg.Receiver=="*"{
-				log.Printf("Personal message must have a specific receiver, got: %s", msg.Receiver)
-				continue
-			}
-			// Handle personal message (e.g., send to specific client)
+		case Personal:
 			hub.private <- msg
 
-		case "Broadcast":
-			if msg.Receiver!="*"{
-				log.Printf("Broadcast message should have receiver as '*', got: %s", msg.Receiver)
-				continue
-			}
-			// Handle broadcast message (e.g., send to all clients)
+		case Broadcast:
+			hub.broadcast <- msg
+
+		case Control:
 			hub.broadcast <- msg
 
 		default:
-			log.Printf("Unknown message type: %s", msg.Type)
+			log.Printf("Unknown message type after validation: %v", msg.Type)
 		}
-		// Handle the messgae //async db write
-
 	}
 }
 
