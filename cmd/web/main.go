@@ -5,8 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"database/sql"
+	"os"
+	"time"
 
-	// "github.com/joho/godotenv"
+	_ "github.com/lib/pq"
+	"github.com/joho/godotenv"
 	"github.com/gorilla/websocket"
 )
 
@@ -140,15 +144,40 @@ func serveWS(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	dsn := os.Getenv("DSN")
+	log.Printf("Connecting to database with DSN: %s", dsn)
+	_ = loadDatabase(dsn)
+	log.Println("Database connected successfully")
+
 	hub := newHub()
 	go hub.run() // IMPORTANT
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWS(hub, w, r)
 	})
-    err := http.ListenAndServe(":8080", nil)
+    err = http.ListenAndServe(":8080", nil)
     if err != nil {
        fmt.Println("Error starting server:", err)
     }
 	log.Println("Server started on :8080")
+}
+
+func loadDatabase(dsn string) *sql.DB {
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		panic(err)
+	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
+	if err := db.Ping(); err != nil {
+		log.Fatalln(err)
+	}
+
+	return db
 }
