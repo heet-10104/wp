@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Hub) handlePersonalMessage(msg Message) {
-	log.Printf("Private message from %s to %s: %s", msg.Sender, msg.Receiver, msg.Payload)
+	log.Printf("Private message from %s to %s: %+v", msg.Sender, msg.Receiver, msg.Payload)
 	if target, ok := h.clients[msg.Receiver]; ok {
 		payload, err := json.Marshal(msg)
 		if err != nil {
