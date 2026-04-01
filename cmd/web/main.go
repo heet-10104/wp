@@ -100,16 +100,16 @@ func (h *Hub) run() {
     for {
         select {
         case client := <-h.register:
-			h.registerConnection(client)
+			go h.registerConnection(client)
 
         case client := <-h.unregister:
-			h.unregisterConnection(client)
+			go h.unregisterConnection(client)
 
         case msg := <-h.private:
-			h.handlePersonalMessage(msg)
+			go h.handlePersonalMessage(msg)
 
         case message := <-h.broadcast:
-			h.handleBroadcastMessage(message)
+			go h.handleBroadcastMessage(message)
 
         }
     }
