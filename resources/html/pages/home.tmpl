@@ -1,0 +1,11 @@
+{{define "title"}}Chat Room - {{.Room}}{{end}}
+
+{{define "body"}}
+<h1>Welcome to Room: {{.Room}}</h1>
+<h2>Connected Clients:</h2>
+<ul>
+    {{range .Clients}}
+    <li>{{.}}</li>
+    {{end}}
+</ul>
+{{end}}

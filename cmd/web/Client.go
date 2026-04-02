@@ -6,4 +6,5 @@ type Client struct {
 	id   string
 	conn *websocket.Conn
 	send chan []byte
+	room string
 }

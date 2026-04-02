@@ -7,7 +7,7 @@ func (h *Hub) registerConnection(client *Client) {
 	//if not add it to the db
 	//if yes, update the db to show that client is online
 	h.clients[client.id] = client
-	log.Printf("User %s connected", client.id)
+	log.Printf("User %s connected to room %s", client.id, client.room)
 }
 
 func (h *Hub) unregisterConnection(client *Client) {
