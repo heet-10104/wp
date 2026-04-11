@@ -1,0 +1,141 @@
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT PANEL */
+.left-panel {
+    width: 260px;
+    background: #020617;
+    padding: 15px;
+    overflow-y: auto;
+    border-right: 1px solid #1e293b;
+}
+
+.video-list {
+    list-style: none;
+    padding: 0;
+}
+
+.video-list li {
+    padding: 10px;
+    margin: 6px 0;
+    background: #1e293b;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.video-list li:hover {
+    background: #334155;
+}
+
+.video-list li.active {
+    background: #2563eb;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* VIDEO */
+video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: black;
+}
+
+/* CHAT */
+.chat {
+    margin-top: 20px;
+}
+
+.chat-box {
+    height: 220px;
+    overflow-y: auto;
+    background: #020617;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    padding: 6px;
+    margin: 4px 0;
+    border-radius: 6px;
+}
+
+.chat-message.self {
+    background: #2563eb;
+    text-align: right;
+}
+
+.chat-message.other {
+    background: #1e293b;
+}
+
+.chat-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-controls input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+}
+
+.chat-controls select,
+.chat-controls button {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: #1e293b;
+    color: white;
+    cursor: pointer;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 300px;
+    background: #020617;
+    transition: 0.3s;
+    position: relative;
+}
+
+.sidebar.collapsed {
+    width: 50px;
+}
+
+.toggle-btn {
+    position: absolute;
+    left: -40px;
+    top: 20px;
+    background: #1e293b;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.sidebar.collapsed .sidebar-content {
+    display: none;
+}

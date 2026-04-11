@@ -13,6 +13,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+/*BUGS
+1. refreh page leads to empty msgs
+2. information of the room must be pushed
+3. need to implement seek, next, prev
+*/
+
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true

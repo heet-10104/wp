@@ -1,6 +1,3 @@
-//sanity check payload
-//put it in db
-
 package main
 
 import (
@@ -10,6 +7,7 @@ import (
 )
 
 func (h *Hub) handleBroadcastMessage(msg Message) {
+
 	for _, client := range h.clients {
 		if strings.EqualFold(msg.Sender, client.id) {
 			continue

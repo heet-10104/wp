@@ -1,11 +1,71 @@
 {{define "title"}}Chat Room - {{.Room}}{{end}}
 
 {{define "body"}}
-<h1>Welcome to Room: {{.Room}}</h1>
-<h2>Connected Clients:</h2>
-<ul>
-    {{range .Clients}}
-    <li>{{.}}</li>
-    {{end}}
-</ul>
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <h2>Videos</h2>
+
+        <div class="picker">
+            <input type="file" id="folderInput" webkitdirectory multiple>
+        </div>
+
+        <ul class="video-list"></ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <h1>Room: {{.Room}}</h1>
+
+        <!-- VIDEO PLAYER -->
+        <video id="videoPlayer" controls></video>
+
+        <!-- CHAT -->
+        <div class="chat">
+            <h3>Chat</h3>
+
+            <div id="chatBox" class="chat-box"></div>
+
+            <div class="chat-controls">
+                <select id="receiverSelect">
+                    <option value="*">Broadcast</option>
+                    {{range .Clients}}
+                    <option value="{{.}}">{{.}}</option>
+                    {{end}}
+                </select>
+
+                <input type="text" id="chatInput" placeholder="Type message..." />
+                <button id="sendButton" type="button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <button onclick="toggleSidebar()" class="toggle-btn">☰</button>
+
+        <div class="sidebar-content">
+            <h2>Room Info</h2>
+            <p><strong>Room:</strong> {{.Room}}</p>
+
+            <h2>Clients</h2>
+            <ul>
+                {{range .Clients}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!-- SCRIPTS -->
+<script type="module" src="/resources/js/ws_client.js"></script>
+<script type="module" src="/resources/js/folder_handler.js"></script>
+<script type="module" src="/resources/js/chat_handler.js"></script>
+<script type="module" src="/resources/js/msg_mux.js"></script>
+
 {{end}}
+

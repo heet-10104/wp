@@ -28,6 +28,7 @@ const room = urlParams.get("room") || "general";
 const wsUri = `ws://localhost:8080/ws?username=${encodeURIComponent(username)}&room=${encodeURIComponent(room)}`;
 console.log(`Connecting to: ${wsUri}`);
 websocket = new WebSocket(wsUri);
+window.websocket = websocket;
 window.socket = websocket;
 window.chatUsername = username;
 initializeWebSocketListeners(websocket);

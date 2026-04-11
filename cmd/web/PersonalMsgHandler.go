@@ -1,5 +1,4 @@
-//sanity check payload
-// put it in db
+
 package main
 
 import (
