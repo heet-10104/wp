@@ -2,70 +2,120 @@
 
 {{define "body"}}
 
-<div class="container">
+<link rel="stylesheet" href="/resources/css/style.css">
 
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-        <h2>Videos</h2>
+<div class="video-app">
 
-        <div class="picker">
-            <input type="file" id="folderInput" webkitdirectory multiple>
+    <!-- VIDEO -->
+    <video id="videoPlayer" controls autoplay></video>
+
+    <!-- LEFT FAB -->
+    <div class="fab left" id="videoFab">🎬</div>
+
+    <!-- VIDEO PANEL -->
+    <div class="panel left-panel" id="videoPanel">
+        <div class="panel-header">
+            <span class="play-list">Videos</span>
         </div>
+
+        <label class="file-btn">
+            Upload
+            <input type="file" id="folderInput" webkitdirectory multiple hidden>
+        </label>
 
         <ul class="video-list"></ul>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-        <h1>Room: {{.Room}}</h1>
+    <!-- RIGHT FAB -->
+    <div class="fab right" id="chatFab">💬</div>
 
-        <!-- VIDEO PLAYER -->
-        <video id="videoPlayer" controls></video>
-
-        <!-- CHAT -->
-        <div class="chat">
-            <h3>Chat</h3>
-
+    <!-- CHAT PANEL -->
+    <div class="panel chat-panel" id="chatPanel">
+        <div class="panel-header">
+            <span class="room-name">{{.Room}}</span>
+             <div class="select-wrapper">
+                    <select id="receiverSelect">
+                        <option value="*">Broadcast</option>
+                        {{range .Clients}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{end}}
+                    </select>
+                </div>
+        </div>
+<br>
+        <div class="chat-content">
             <div id="chatBox" class="chat-box"></div>
 
             <div class="chat-controls">
-                <select id="receiverSelect">
-                    <option value="*">Broadcast</option>
-                    {{range .Clients}}
-                    <option value="{{.}}">{{.}}</option>
-                    {{end}}
-                </select>
-
-                <input type="text" id="chatInput" placeholder="Type message..." />
-                <button id="sendButton" type="button">Send</button>
+               
+                <input type="text" id="chatInput" placeholder="Message..." />
+                
             </div>
-        </div>
-    </div>
-
-    <!-- RIGHT SIDEBAR -->
-    <div id="sidebar" class="sidebar">
-        <button onclick="toggleSidebar()" class="toggle-btn">☰</button>
-
-        <div class="sidebar-content">
-            <h2>Room Info</h2>
-            <p><strong>Room:</strong> {{.Room}}</p>
-
-            <h2>Clients</h2>
-            <ul>
-                {{range .Clients}}
-                <li>{{.}}</li>
-                {{end}}
-            </ul>
         </div>
     </div>
 
 </div>
 
-<!-- SCRIPTS -->
 <script type="module" src="/resources/js/ws_client.js"></script>
 <script type="module" src="/resources/js/folder_handler.js"></script>
 <script type="module" src="/resources/js/chat_handler.js"></script>
 <script type="module" src="/resources/js/msg_mux.js"></script>
 
-{{end}}
+<script>
+    const videoFab = document.getElementById("videoFab");
+    const chatFab = document.getElementById("chatFab");
+    const videoPanel = document.getElementById("videoPanel");
+    const chatPanel = document.getElementById("chatPanel");
 
+    videoFab.onclick = () => {
+        videoPanel.classList.toggle("open");
+        chatPanel.classList.remove("open");
+    };
+
+    chatFab.onclick = () => {
+        chatPanel.classList.toggle("open");
+        videoPanel.classList.remove("open");
+    };
+
+    function closeVideoPanel() {
+        videoPanel.classList.remove("open");
+    }
+
+    function closeChatPanel() {
+        chatPanel.classList.remove("open");
+    }
+
+    document.addEventListener("click", (e) => {
+        if (!videoPanel.contains(e.target) && !e.target.closest("#videoFab")) {
+            videoPanel.classList.remove("open");
+        }
+
+        if (!chatPanel.contains(e.target) && !e.target.closest("#chatFab")) {
+            chatPanel.classList.remove("open");
+        }
+    });
+
+    let hideTimer;
+
+    // all FABs
+    const fabs = document.querySelectorAll(".fab");
+
+    function showFABs() {
+        fabs.forEach(fab => fab.classList.remove("hidden"));
+
+        clearTimeout(hideTimer);
+
+        // hide after 2.5 sec
+        hideTimer = setTimeout(() => {
+            fabs.forEach(fab => fab.classList.add("hidden"));
+        }, 2500);
+    }
+
+    // detect mouse movement
+    document.addEventListener("mousemove", showFABs);
+
+    // show initially
+    showFABs();
+</script>
+
+{{end}}

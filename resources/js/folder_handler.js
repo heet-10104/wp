@@ -41,3 +41,8 @@ document.getElementById("folderInput").addEventListener("change", function (e) {
 function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("collapsed");
 }
+
+document.getElementById("folderInput").addEventListener("click", () => {
+    const url = URL.createObjectURL(file);
+    player.src = url;
+});
