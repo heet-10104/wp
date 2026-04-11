@@ -190,7 +190,8 @@ func routes() http.Handler {
 	router := httprouter.New()
 
 	router.HandlerFunc(http.MethodGet, "/home", home)
-	router.HandlerFunc(http.MethodGet, "/", home)
+	router.HandlerFunc(http.MethodGet, "/", joinRoom)
+	router.ServeFiles("/resources/*filepath", http.Dir("./resources"))
 
 	return router
 }

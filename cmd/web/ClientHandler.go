@@ -6,7 +6,6 @@ import (
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
-
 	roomParam := r.URL.Query()["room"]
 	if len(roomParam) == 0 || len(roomParam[0]) < 1 {
 		log.Println("Url Param 'room' is missing")
@@ -14,11 +13,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	room := roomParam[0]
 
-	//get room model by room name
-
+	// Create room if it doesn't exist
 	if _, ok := rooms[room]; !ok {
-		log.Printf("Room %s does not exist", room)
-		return
+		rooms[room] = newHub()
+		rooms[room].room = room
+		go rooms[room].run()
+		log.Printf("Creating new room: %s", room)
 	}
 
 	clients := make([]string, 0)
@@ -26,11 +26,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 		clients = append(clients, clientID)
 	}
 
-	data := struct{
-		Room string
+	data := struct {
+		Room    string
 		Clients []string
 	}{
-		Room: room,
+		Room:    room,
 		Clients: clients,
 	}
 
@@ -38,4 +38,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	// data := newTemplateData(r)
 	render(w, http.StatusOK, "home.tmpl", data)
+}
+
+func joinRoom(w http.ResponseWriter, r *http.Request) {
+	render(w, http.StatusOK, "join.tmpl", nil)
 }

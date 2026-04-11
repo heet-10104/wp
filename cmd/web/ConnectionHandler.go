@@ -16,4 +16,5 @@ func (h *Hub) unregisterConnection(client *Client) {
 		delete(h.clients, client.id)
 		close(client.send)
 	}
+	log.Printf("User %s disconnected from room %s", client.id, client.room)
 }

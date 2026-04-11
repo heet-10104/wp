@@ -1,0 +1,127 @@
+{{define "title"}}Join Chat Room{{end}}
+
+{{define "body"}}
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #333;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h2 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #cccccc;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style>
+
+<div id="joinModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Join Chat Room</h2>
+        <form id="joinForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="room">Room Name:</label>
+            <input type="text" id="room" name="room" required>
+
+            <button type="submit">Join</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function closeModal() {
+    document.getElementById('joinModal').style.display = 'none';
+}
+
+document.getElementById('joinForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const room = document.getElementById('room').value;
+    console.log(`Joining room: ${room} as ${username}`);
+    // redirect to /home with query parameters
+    window.location.href = `/home?username=${encodeURIComponent(username)}&room=${encodeURIComponent(room)}`;
+    closeModal();
+});
+</script>
+{{end}}
