@@ -25,7 +25,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get("username") || "guest";
 const room = urlParams.get("room") || "general";
 
-const wsUri = `ws://localhost:8080/ws?username=${encodeURIComponent(username)}&room=${encodeURIComponent(room)}`;
+const wsUri = `ws://100.68.130.13:8080/ws?username=${encodeURIComponent(username)}&room=${encodeURIComponent(room)}`;
 console.log(`Connecting to: ${wsUri}`);
 websocket = new WebSocket(wsUri);
 window.websocket = websocket;

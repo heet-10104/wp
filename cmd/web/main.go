@@ -14,6 +14,13 @@ import (
 )
 
 /*BUGS
+PRIORITY:
+1. File Format in video player
+2. Audio and subtitle selection
+3. Chapter selection
+
+PLAN -> use libraries if not that doesnt work -> API with VLC etc
+
 1. refreh page leads to empty msgs
 2. information of the room must be pushed
 3. need to implement seek, next, prev
@@ -197,6 +204,7 @@ func routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/home", home)
 	router.HandlerFunc(http.MethodGet, "/", joinRoom)
+	router.HandlerFunc(http.MethodGet, "/clients", getClients)
 	router.ServeFiles("/resources/*filepath", http.Dir("./resources"))
 
 	return router

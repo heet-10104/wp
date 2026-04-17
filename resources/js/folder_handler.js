@@ -29,9 +29,9 @@ document.getElementById("folderInput").addEventListener("change", function (e) {
             document.querySelectorAll(".video-list li").forEach(el => el.classList.remove("active"));
             li.classList.add("active");
 
-            if (window.sendControl) {
-                window.sendControl("jump", { index: index });
-            }
+            // if (window.sendControl) {
+            //     window.sendControl("jump", { index: index });
+            // }
         };
 
         videoList.appendChild(li);

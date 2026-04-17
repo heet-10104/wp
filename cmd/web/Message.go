@@ -68,7 +68,8 @@ const (
 	Pause
 	Next
 	Previous
-	Jump
+	JumpRight
+	JumpLeft
 )
 
 func (cc *ControlCommand) UnmarshalJSON(data []byte) error {
@@ -88,8 +89,11 @@ func (cc *ControlCommand) UnmarshalJSON(data []byte) error {
 		case "previous":
 			*cc = Previous
 			return nil
-		case "jump":
-			*cc = Jump
+		case "jumpright":
+			*cc = JumpRight
+			return nil
+		case "jumpleft":
+			*cc = JumpLeft
 			return nil
 		default:
 			return fmt.Errorf("invalid control command: %s", s)
@@ -99,7 +103,7 @@ func (cc *ControlCommand) UnmarshalJSON(data []byte) error {
 	var i int
 	if err := json.Unmarshal(data, &i); err == nil {
 		switch ControlCommand(i) {
-		case Play, Pause, Next, Previous, Jump:
+		case Play, Pause, Next, Previous, JumpRight, JumpLeft:
 			*cc = ControlCommand(i)
 			return nil
 		}
@@ -119,8 +123,10 @@ func (cc ControlCommand) MarshalJSON() ([]byte, error) {
 		s = "next"
 	case Previous:
 		s = "previous"
-	case Jump:
-		s = "jump"
+	case JumpRight:
+		s = "jumpright"
+	case JumpLeft:
+		s = "jumpleft"
 	default:
 		return nil, fmt.Errorf("invalid control command: %d", cc)
 	}
