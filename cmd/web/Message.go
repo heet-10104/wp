@@ -12,6 +12,7 @@ const (
 	Broadcast MessageType = iota
 	Personal
 	Control
+	Sync
 )
 
 func (mt *MessageType) UnmarshalJSON(data []byte) error {
@@ -28,6 +29,9 @@ func (mt *MessageType) UnmarshalJSON(data []byte) error {
 		case "control":
 			*mt = Control
 			return nil
+		case "sync":
+			*mt = Sync
+			return nil
 		default:
 			return fmt.Errorf("invalid message type: %s", s)
 		}
@@ -36,7 +40,7 @@ func (mt *MessageType) UnmarshalJSON(data []byte) error {
 	var i int
 	if err := json.Unmarshal(data, &i); err == nil {
 		switch MessageType(i) {
-		case Broadcast, Personal, Control:
+		case Broadcast, Personal, Control, Sync:
 			*mt = MessageType(i)
 			return nil
 		}
@@ -54,6 +58,8 @@ func (mt MessageType) MarshalJSON() ([]byte, error) {
 		s = "personal"
 	case Control:
 		s = "control"
+	case Sync:
+		s = "sync"
 	default:
 		return nil, fmt.Errorf("invalid message type: %d", mt)
 	}
@@ -138,11 +144,16 @@ type Payload struct {
 	Command     ControlCommand `json:"command,omitempty"`
 }
 
+type SyncPayload struct {
+	Position float64 `json:"position"`
+}
+
 type Message struct {
-	Sender   string      `json:"sender"`
-	Receiver string      `json:"receiver,omitempty"`
-	Type     MessageType `json:"type"`
-	Payload  Payload     `json:"payload"`
+	Sender   string      	`json:"sender"`
+	Receiver string      	`json:"receiver"`
+	Type     MessageType 	`json:"type"`
+	Payload  Payload     	`json:"payload,omitempty"`
+	SyncPayload SyncPayload `json:"syncPayload,omitempty"`
 }
 
 func validatePayload(payload Payload, msgType MessageType) bool {
@@ -154,12 +165,19 @@ func validatePayload(payload Payload, msgType MessageType) bool {
 	return strings.TrimSpace(payload.ChatMessage) != ""
 }
 
+func validateSyncPayload(syncPayload SyncPayload, msgType MessageType) bool {
+	if msgType == Sync {
+		return syncPayload.Position >= 0
+	}
+	return true
+}
+
 func validateMessage(msg Message) bool {
 	if strings.TrimSpace(msg.Sender) == "" {
 		return false
 	}
 
-	if msg.Type != Broadcast && msg.Type != Personal && msg.Type != Control {
+	if msg.Type != Broadcast && msg.Type != Personal && msg.Type != Control && msg.Type != Sync {
 		return false
 	}
 
@@ -176,10 +194,20 @@ func validateMessage(msg Message) bool {
 		if strings.TrimSpace(msg.Receiver) == "" {
 			return false
 		}
+	case Sync:
+		if strings.TrimSpace(msg.Receiver) != "*" {
+			return false
+		}
 	}
 
-	if !validatePayload(msg.Payload, msg.Type) {
-		return false
+	if msg.Type == Personal || msg.Type == Control || msg.Type == Broadcast{
+		if !validatePayload(msg.Payload, msg.Type) {
+			return false
+		}
+	}else{
+		if !validateSyncPayload(msg.SyncPayload, msg.Type) {
+			return false
+		}
 	}
 
 	return true

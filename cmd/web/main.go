@@ -65,6 +65,7 @@ func (c *Client) readPump(hub *Hub) {
 			break
 		}
 
+		//json->Message struct
 		var msg Message
 		err = json.Unmarshal(message, &msg)
 		if err != nil {
@@ -87,6 +88,9 @@ func (c *Client) readPump(hub *Hub) {
 			hub.broadcast <- msg
 
 		case Control:
+			hub.broadcast <- msg
+
+		case Sync:
 			hub.broadcast <- msg
 
 		default:
